@@ -6,7 +6,7 @@ import User from "./models/User.js";
 const app = express();
 const { PORT } = process.env;
 
-
+app.use(express.json())
 
 app.get("/users", async (req, res) => {
     connectDb()
@@ -24,11 +24,13 @@ app.get("/users", async (req, res) => {
 app.post("/users", async (req, res) => {
     connectDb()
 
+    const { name, email, password } = req.body
+
     try {
         const newUserDoc = await User.create({
-            name: "Teste",
-            email: "Teste@teste.com",
-            password: "12345678910",
+            name,
+            email,
+            password,
         })
         
         res.json(newUserDoc)
@@ -36,7 +38,7 @@ app.post("/users", async (req, res) => {
         res.status(500).json(error)
     }
 
-})
+}) 
 
 app.listen(PORT, () => {
     console.log(`Servidor está rodando na porta ${PORT}`)
