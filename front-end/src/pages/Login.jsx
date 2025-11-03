@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 const Login = () => {
   // let variavelNormal = "teste@gmail.com"
@@ -7,11 +8,24 @@ const Login = () => {
   const [password, setPassword] = useState("")
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     
-    console.log(`Enviaram as seguintes informacoes. E-mail: ${email}. Senha: ${password}`)
-    setEmail("teste2@gmail.com")
+    if(email && password) {
+      try {
+        
+        const { data: userDoc } = await axios.post('/users/login',  {
+          email,
+          password
+        })
+  
+        console.log(userDoc)
+      } catch (error) {
+        alert(`Deu um erro ao logar: ${error.response.data}`)
+      }
+    } else {
+      alert("Preencha todos os campos")
+    }
   }
 
   return (
