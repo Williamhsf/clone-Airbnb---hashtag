@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom'
 
 const Login = () => {
   // let variavelNormal = "teste@gmail.com"
-  const [email, setEmail] = useState("teste@gmail.com")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
     
+    console.log(`Enviaram as seguintes informacoes. E-mail: ${email}. Senha: ${password}`)
     setEmail("teste2@gmail.com")
-    console.log(email)
   }
 
   return (
@@ -23,11 +25,14 @@ const Login = () => {
             className="w-full rounded-full border border-gray-300 px-4 py-2"
             placeholder='Digite seu e-mail'
             value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input 
             type="password" 
             className="w-full rounded-full border border-gray-300 px-4 py-2"
             placeholder='Digite sua senha'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <button className='cursor-pointer bg-primary-400 text-white font-bold w-full rounded-full border border-gray-300 px-4 py-2'>Login</button>
         </form>
