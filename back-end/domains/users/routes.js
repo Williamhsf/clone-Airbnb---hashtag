@@ -22,6 +22,23 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/profile", async (req, res) => {
+  const { token } = req.cookies;
+
+  if(token){
+    try {
+      const userInfo = jwt.verify(token, JWT_SECRET_KEY);
+      //const userDoc = await User.find();
+  
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  } else {
+    res.json(null);
+  }
+  
+});
+
 router.post("/", async (req, res) => {
   connectDb();
 
@@ -56,8 +73,6 @@ router.post("/login", async (req, res) => {
       if (passwordCorrect) {
         const newUserObj = { name, email, _id };
         const token = jwt.sign(newUserObj, JWT_SECRET_KEY);
-
-        console.log({ token, JWT_SECRET_KEY });
 
         res.cookie("token", token).json(newUserObj);
       } else {
