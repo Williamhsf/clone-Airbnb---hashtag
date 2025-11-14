@@ -10,7 +10,7 @@ const AccPlaces = () => {
     }
     
     return ( 
-        <div className="w-full max-w-7xl">
+        <div className="w-full max-w-7xl flex flex-col items-center">
             { action !== "new" ?
                 <Link to="/account/places/new"
                     className=" hover:bg-primary-500 flex gap-2 bg-primary-400 min-w-44 cursor-pointer rounded-full px-4 py-2 text-white transition">

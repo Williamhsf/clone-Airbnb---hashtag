@@ -1,11 +1,20 @@
 import { useState } from "react";
+import Perks from "./Perks";
 
 const NewPlace = () => {
     const [title, setTitle] = useState("");
     const [city, setCity] = useState("");
-    const [photo, setPhoto] = useState("");
+    const [photos, setPhotos] = useState("");
+    const [description, setDescription] = useState("");
+    const [extras, setExtras] = useState("");
+    const [price, setPrice] = useState("");
+    const [checkin, setCheckin] = useState("");
+    const [checkout, setCheckout] = useState("");
+    const [guests, setGuests] = useState("");
 
-    const handleSubmit = (e) => {}
+    const handleSubmit = (e) => {
+        e.preventDefault()
+    }
 
     return (
         <form onSubmit={handleSubmit} className="w-full px-8 flex flex-col gap-6">
@@ -41,9 +50,9 @@ const NewPlace = () => {
                         type="text"
                         placeholder="Adicione uma foto pelo link dela"
                         className="grow rounded-full border border-gray-300 px-4 py-2"
-                        value={photo}
+                        value={photos}
                         id="photos"
-                        onChange={(e) => setPhoto(e.target.value)}     
+                        onChange={(e) => setPhotos(e.target.value)}     
                     />
                     <button className="cursor-pointer rounded-full border border-gray-300  bg-gray-100 px-4 py-2 transition
                     hover:bg-gray-200">
@@ -71,13 +80,92 @@ const NewPlace = () => {
             </div>
 
             <div className="flex flex-col gap-1">
-                <h2 className="ml-2 text-2xl font-bold">Título</h2>
-                <input 
-                    type="text"
-                    placeholder="Digite o título do seu anúncio"
-                    className="rounded-full border border-gray-300 px-4 py-2"     
+                <label htmlFor="description" className="ml-2 text-2xl font-bold">Descrição</label>
+                <textarea
+                    placeholder="Digite sua descrição do seu anúncio"
+                    className="rounded-2xl border border-gray-300 px-4 py-2 h-56 resize-none"
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}     
                 />
             </div>
+
+            <div className="flex flex-col gap-1">
+                <label htmlFor="perks" className="ml-2 text-2xl font-bold">
+                    Comodidades
+                </label>
+
+                <Perks />
+            </div>
+
+            <div className="flex flex-col gap-1">
+                <label htmlFor="extras" className="ml-2 text-2xl font-bold">Informações Extras</label>
+                <textarea
+                    placeholder="Digite sua descrição do seu anúncio"
+                    className="rounded-2xl border border-gray-300 px-4 py-2 h-56 resize-none"
+                    id="extras"
+                    value={extras}
+                    onChange={(e) => setExtras(e.target.value)}     
+                />
+            </div>
+
+            <div className="flex flex-col gap-2">
+                <h2 htmlFor="extras" className="ml-2 text-2xl font-bold">Restrições e Preço</h2>
+
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(225px,1fr))] gap-6">
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="price" className="ml-2 text-xl font-bold">Preço</label>
+                        <input 
+                            type="number"
+                            placeholder="500"
+                            className="rounded-full border border-gray-300 px-4 py-2"
+                            value={price}
+                            id="price"
+                            onChange={(e) => setPrice(e.target.value)}     
+                        />
+                    </div>  
+
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="checkin" className="ml-2 text-xl font-bold">Checkin</label>
+                        <input 
+                            type="text"
+                            placeholder="16:00"
+                            className="rounded-full border border-gray-300 px-4 py-2"
+                            value={checkin}
+                            id="checkin"
+                            onChange={(e) => setCheckin(e.target.value)}     
+                        />
+                    </div>
+                    
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="checkout" className="ml-2 text-xl font-bold">Checkout</label>
+                        <input 
+                            type="text"
+                            placeholder="12:00"
+                            className="rounded-full border border-gray-300 px-4 py-2"
+                            value={checkout}
+                            id="checkout"
+                            onChange={(e) => setCheckout(e.target.value)}     
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="price" className="ml-2 text-xl font-bold">Nº convidados</label>
+                        <input 
+                            type="number"
+                            placeholder="4"
+                            className="rounded-full border border-gray-300 px-4 py-2"
+                            value={guests}
+                            id="guests"
+                            onChange={(e) => setGuests(e.target.value)}     
+                        />
+                    </div>  
+                </div>
+            </div>
+
+            <button className="hover:bg-primary-500 bg-primary-400 min-w-44 cursor-pointer rounded-full px-4 py-2 text-white transition">
+                Salvar informações
+            </button>
         </form>)
 }
 
