@@ -1,14 +1,23 @@
-const JWTVerify = () => {
-    const { token } = req.cookies
-    
-    if (token) {
-        jwt.verify(token, JWT_SECRET_KEY, {}, (error, userInfo) => {
-            if (error) throw error
+import "dotenv/config";
+import jwt from "jsonwebtoken";
 
-            res.json(userInfo)
-        })
-    } else {
-        res.json(null)
-    }
-}
+const { JWT_SECRET_KEY } = process.env;
 
+export const JWTVerify = (req) => {
+  const { token } = req.cookies;
+
+  if (token) {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, JWT_SECRET_KEY, {}, (error, userInfo) => {
+        if (error) {
+          console.error("Deu algum erro ao verificar com o JWT:", error);
+          reject(error);
+        }
+
+        resolve(userInfo);
+      });
+    });
+  } else {
+    return null;
+  }
+};
