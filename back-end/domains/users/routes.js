@@ -4,6 +4,7 @@ import { connectDb } from "../../config/db.js";
 import User from "./model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { JWTVerify } from "../../utils/jwtVerify.js";
 
 const router = Router();
 const bcryptSalt = bcrypt.genSaltSync();
@@ -22,17 +23,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/profile", async (req, res) => {
-  const { token } = req.cookies;
-
-  if (token) {
-    jwt.verify(token, JWT_SECRET_KEY, {}, (error, userInfo) => {
-      if (error) throw error;
-
-      res.json(userInfo);
-    })
-  } else {
-    res.json(null);
-  }
+  const userInfo = await JWTVerify(req);
+  
+  res.json(userInfo);
 });
 
 router.post("/", async (req, res) => {
@@ -76,17 +69,21 @@ router.post("/login", async (req, res) => {
 
       if (passwordCorrect) {
         const newUserObj = { name, email, _id };
-        const token = jwt.sign(newUserObj, JWT_SECRET_KEY, {}, (error, token) => {
-          if(error) {
-            console.error(error)
-            res.status(500).json(error)
+        const token = jwt.sign(
+          newUserObj,
+          JWT_SECRET_KEY,
+          {},
+          (error, token) => {
+            if (error) {
+              console.error(error);
+              res.status(500).json(error);
 
-            return
+              return;
+            }
+
+            res.cookie("token", token).json(newUserObj);
           }
-
-          res.cookie("token", token).json(newUserObj);
-        });
-
+        );
       } else {
         res.status(400).json("Senha inválida!");
       }
