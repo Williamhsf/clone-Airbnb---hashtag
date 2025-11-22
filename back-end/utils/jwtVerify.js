@@ -11,7 +11,7 @@ export const JWTVerify = (req) => {
       jwt.verify(token, JWT_SECRET_KEY, {}, (error, userInfo) => {
         if (error) {
           console.error("Deu algum erro ao verificar com o JWT:", error);
-          reject(error);
+          reject(error)
         }
 
         resolve(userInfo);

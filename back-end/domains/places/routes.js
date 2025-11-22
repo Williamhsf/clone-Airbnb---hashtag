@@ -1,4 +1,5 @@
 import { Router } from "express";
+import Place from "./model";
 
 const router = Router;
 
