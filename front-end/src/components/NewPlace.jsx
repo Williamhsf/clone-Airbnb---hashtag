@@ -2,11 +2,13 @@ import { useState } from "react";
 import Perks from "./Perks";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import { useUserContext } from "../contexts/UserContext.jsx";
 
 const NewPlace = () => {
+  const { user } = useUserContext()
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
-  const [photos, setPhotos] = useState("");
+  const [photos, setPhotos] = useState([]);
   const [description, setDescription] = useState("");
   const [extras, setExtras] = useState("");
   const [price, setPrice] = useState("");
@@ -14,22 +16,45 @@ const NewPlace = () => {
   const [checkout, setCheckout] = useState("");
   const [guests, setGuests] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [perks, setPerks] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
-    if(condition) {
+    //photos.length > 0 &&
+    if (
+      title &&
+      city &&
+      description &&
+      price &&
+      checkin &&
+      checkout &&
+      guests
+    ) {
+      try {
+        const newPlace = await axios.post('/places', {
+          owner: user._id,
+          title,
+          city,
+          photos,
+          description,
+          extras,
+          perks,
+          price,
+          checkin,
+          checkout,
+          guests,
+        })
+
+        console.log(newPlace)
         
-    }
-    try {
-      //const newPlace = await axios.post('/places', {
-
-      //})
-
-      setRedirect(true);
-    } catch (error) {
-      console.error(JSON.stringify(error));
-      alert("Deu erro ao tentar criar um novo lugar");
+        setRedirect(true);
+      } catch (error) {
+        console.error(JSON.stringify(error));
+        alert("Deu erro ao tentar criar um novo lugar");
+      }
+    } else {
+      alert("Preecha todas as informações antes de enviar");
     }
   };
 
@@ -128,7 +153,7 @@ const NewPlace = () => {
           Comodidades
         </label>
 
-        <Perks />
+        <Perks {...{ perks, setPerks }} />
       </div>
 
       <div className="flex flex-col gap-1">
