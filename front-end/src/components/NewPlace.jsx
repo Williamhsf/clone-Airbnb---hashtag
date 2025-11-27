@@ -9,6 +9,7 @@ const NewPlace = () => {
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
   const [photos, setPhotos] = useState([]);
+  const [perks, setPerks] = useState([]);
   const [description, setDescription] = useState("");
   const [extras, setExtras] = useState("");
   const [price, setPrice] = useState("");
@@ -16,7 +17,6 @@ const NewPlace = () => {
   const [checkout, setCheckout] = useState("");
   const [guests, setGuests] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [perks, setPerks] = useState([]);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
