@@ -2,6 +2,7 @@
   "dependencies": {
     "image-downloader": "^4.3.0",
     "jsonwebtoken": "^9.0.2",
-    "mime-types": "^3.0.2"
+    "mime-types": "^3.0.2",
+    "url": "^0.11.4"
   }
 }

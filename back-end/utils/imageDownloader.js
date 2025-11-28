@@ -7,13 +7,13 @@ export const downloadImage = async (link, destination) => {
 
     options = {
       url: link,
-      dest: `${destination}/${filename}`,
+      dest: `${destination}${filename}`,
     };
 
     try {
         await download.image(options)
 
-        console.log('Saved to', filename); // saved to /path/to/dest/photo.jpg
+        console.log('Saved to', filename);
     } catch (error) {
         console.error(error);
     }
