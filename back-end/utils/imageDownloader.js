@@ -1,20 +1,27 @@
-import download from 'image-downloader';
-import mime from "mime-types"
+import download from "image-downloader";
+import mime from "mime-types";
 
 export const downloadImage = async (link, destination) => {
-    const extension = mime.extension(link)
-    const filename = `${Date.now()}.${extension}`
+  const mimeType = mime.lookup(link);
+  const contentType = mime.contentType(mimeType);
+  const extension = mime.extension(contentType);
 
-    options = {
+  const filename = `${Date.now()}.${extension}`;
+  //const fullPath = `${destination}${filename}`;
+
+  try {
+    const options = {
       url: link,
       dest: `${destination}${filename}`,
+      //dest: fullPath,
     };
 
-    try {
-        await download.image(options)
+    await download.image(options);
 
-        console.log('Saved to', filename);
-    } catch (error) {
-        console.error(error);
-    }
-}
+    //return filename;
+    console.log("Saved to", filename);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
