@@ -41,12 +41,11 @@ const PhotoUploader = ({ photolink, setPhotoLink, setPhotos, photos }) => {
 
       <div className="mt-2 grid grid-cols-5 gap-4">
         {photos.map((photo) => (
-          <img
+          <img 
             className="aspect-square rounded-2xl object-cover"
             src={`${axios.defaults.baseURL}/tmp/${photo}`}
-            alt="Imagens do Lugar"
-            key={photo}
-          />
+            alt="Imagens do lugar"
+            key={photo} />
         ))}
 
         <label
