@@ -7,19 +7,19 @@ export const downloadImage = async (link, destination) => {
   const extension = mime.extension(contentType);
 
   const filename = `${Date.now()}.${extension}`;
-  //const fullPath = `${destination}${filename}`;
+  const fullPath = `${destination}${filename}`;
 
   try {
     const options = {
       url: link,
-      dest: `${destination}${filename}`,
-      //dest: fullPath,
+      dest: fullPath,
     };
 
     await download.image(options);
 
-    //return filename;
-    console.log("Saved to", filename);
+    return filename;
+
+    // console.log("Saved to", filename);
   } catch (error) {
     console.error(error);
     throw error;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Perks = ({perks, setPerks}) => {
+const Perks = ({ perks, setPerks }) => {
     
 
     const handleclick = (target) => {

@@ -3,7 +3,7 @@ import Place from "./model.js";
 import { JWTVerify } from "../../utils/jwt.js";
 import { connectDb } from "../../config/db.js";
 import { downloadImage } from "../../utils/imageDownloader.js";
-import { __dirname } from "../../index.js";
+import { __dirname } from "../../server.js";
 
 const router = Router();
 
@@ -24,10 +24,10 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   try {
-    const { _id } = await JWTVerify(req);
+    const { _id: owner } = await JWTVerify(req);
 
     const newPlaceDoc = await Place.create({
-      owner: _id,
+      owner,
       title,
       city,
       photos,
@@ -51,12 +51,12 @@ router.post("/upload/link", async (req, res) => {
   const { link } = req.body;
 
   try {
-    await downloadImage(link, `${__dirname}/tmp/`);
+    const filename = await downloadImage(link, `${__dirname}/tmp/`);
 
-    res.json("Imagem enviada!");
+    res.json(filename);
   } catch (error) {
     console.error(error);
-    res.status(500).json("Deu erro ao baixar a imagem");
+    res.status(500).json("Deu baixar a imagem.");
   }
 });
 
