@@ -16,6 +16,22 @@ const PhotoUploader = ({ photolink, setPhotoLink, setPhotos, photos }) => {
     }
   };
 
+  const uploadPhoto = async (e) => {
+    const { files } = e.target
+    const filesArray = [...files]
+    
+    const formData = new FormData()
+    
+    filesArray.forEach((file) => formData.append("files", file))
+
+    const { data } = await axios.post("/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data"},
+    })
+
+    // console.log(filesArray)
+    // console.log(formData)
+  }
+
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor="photos" className="ml-2 text-2xl font-bold">
@@ -52,7 +68,7 @@ const PhotoUploader = ({ photolink, setPhotoLink, setPhotos, photos }) => {
           htmlFor="file"
           className="flex aspect-square cursor-pointer items-center justify-center gap-2 rounded-2xl border border-gray-300"
         >
-          <input type="file" id="file" className="hidden" />
+          <input type="file" id="file" className="hidden" multiple onChange={uploadPhoto}/>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
