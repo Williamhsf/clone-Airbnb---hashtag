@@ -7,7 +7,14 @@ import multer from "multer"
 import { __dirname } from "../../server.js";
  
 const { S3_ACCESS_KEY, S3_SECRET_KEY, BUCKET } = process.env;
-// const getExtension = 
+
+const getExtension = (path) => {
+  const mimeType = mime.lookup(path);
+  const contentType = mime.contentType(mimeType);
+  const extension = mime.extension(contentType);
+
+  return extension;
+}; 
 
 export const sendToS3 = async (filename, path, mimetype) => {
   const client = new S3Client({
@@ -36,10 +43,8 @@ export const sendToS3 = async (filename, path, mimetype) => {
 };
 
 export const downloadImage = async (link) => {
-  const mimeType = mime.lookup(link);
-  const contentType = mime.contentType(mimeType);
-  const extension = mime.extension(contentType);
-  const destination = `${__dirname}/tmp/`
+  const extension = getExtension(link);
+  const destination = `${__dirname}/tmp/`;
 
   const filename = `${Date.now()}.${extension}`;
   const fullPath = `${destination}${filename}`;
@@ -63,14 +68,16 @@ export const downloadImage = async (link) => {
 
 export const uploadImage = () => {
     const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, `${__dirname}/tmp/`)
-        },
-        filemane: function (req, file, cb) {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9)
-            cb(null, file.fieldname + "-" + uniqueSuffix)
+      destination: function (req, file, cb) {
+        cb(null, `${__dirname}/tmp/`);
+      },
+        filename: function (req, file, cb) {
+            const uniqueSuffix = Date.now()
+            // + "-" + Math.round(Math.random() * 1e9)
+            const extension = getExtension(file.originalname);
+            cb(null, `${Date.now()}-${uniqueSuffix}.${extension}`);
         }
     })
     
-    return multer({ storage })
+    return multer({ storage });
 }

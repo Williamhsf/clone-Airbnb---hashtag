@@ -53,7 +53,7 @@ router.post("/upload/link", async (req, res) => {
   try {
     const { filename, fullPath, mimeType } = await downloadImage(link);
 
-    const fileURL = await sendToS3(filename, fullPath, mimeType)
+    const fileURL = await sendToS3(filename, fullPath, mimeType);
 
     res.json(fileURL);
   } catch (error) {
