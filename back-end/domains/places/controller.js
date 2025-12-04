@@ -72,10 +72,10 @@ export const uploadImage = () => {
         cb(null, `${__dirname}/tmp/`);
       },
         filename: function (req, file, cb) {
-            const uniqueSuffix = Date.now()
-            // + "-" + Math.round(Math.random() * 1e9)
-            const extension = getExtension(file.originalname);
-            cb(null, `${Date.now()}-${uniqueSuffix}.${extension}`);
+          const extension = getExtension(file.originalname);
+          const uniqueSuffix = Math.round(Math.random() * 1e9)
+          
+          cb(null, `${Date.now()}-${uniqueSuffix}.${extension}`);
         }
     })
     

@@ -48,7 +48,6 @@ router.post("/", async (req, res) => {
 
 router.post("/upload/link", async (req, res) => {
   const { link } = req.body;
-  const path = `${__dirname}/tmp/`
 
   try {
     const { filename, fullPath, mimeType } = await downloadImage(link);
@@ -63,29 +62,35 @@ router.post("/upload/link", async (req, res) => {
 });
 
 router.post("/upload", uploadImage().array("files", 10), async (req, res) => {
-  const { files } = req
+  const { files } = req;
 
   const filesPromise = new Promise((resolve, reject) => {
-    const fileURLArray = []
-  
+    const fileURLArray = [];
+
     files.forEach(async (file, index) => {
-      const { filename, path, mimetype } = file
+      const { filename, path, mimetype } = file;
+
       try {
         const fileURL = await sendToS3(filename, path, mimetype);
-        
-        fileURLArray.push(fileURL)
 
-        if (index === files.length - 1) resolve(fileURLArray)
+        fileURLArray.push(fileURL);
       } catch (error) {
-        console.error("Deu erro ao subir para o S3", error)
-        reject(error)
+        console.error("Deu erro ao subir para o S3", error);
+        reject(error);
       }
-    })
-  })
+    });
 
-  const fileURLArrayResolved = await filesPromise
+    const idInterval = setInterval(() => {
+      if (files.length === fileURLArray.length) {
+        clearInterval(idInterval)
+        resolve(fileURLArray);
+      }
+    }, 100)
+  });
 
-  res.json(fileURLArrayResolved)
-})
+  const fileURLArrayResolved = await filesPromise;
+
+  res.json(fileURLArrayResolved);
+});
 
 export default router;
