@@ -23,10 +23,10 @@ const NewPlace = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
 
-    // photos.length > 0 &&
     if (
       title &&
       city &&
+      photos.length > 0 &&
       description &&
       price &&
       checkin &&

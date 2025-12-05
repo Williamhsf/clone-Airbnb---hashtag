@@ -6,6 +6,37 @@ import { sendToS3, downloadImage, uploadImage } from "./controller.js";
 
 const router = Router();
 
+router.get("/", async (req, res) => {
+  connectDb();
+  try {
+    const placeDocs = await Place.find({ owner: _id });
+
+    res.json(placeDocs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Deu erro ao encontrar as Acomodações");
+  }
+});
+
+router.get("/owner", async (req, res) => {
+  connectDb();
+  try {
+    const userInfo = await JWTVerify(req);
+
+    try {
+      const placeDocs = await Place.find({ owner: userInfo._id });
+
+      res.json(placeDocs);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("Deu erro ao verificar o usuario");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Deu erro ao verificar o usuario");
+  }
+});
+
 router.post("/", async (req, res) => {
   connectDb();
 
@@ -82,10 +113,10 @@ router.post("/upload", uploadImage().array("files", 10), async (req, res) => {
 
     const idInterval = setInterval(() => {
       if (files.length === fileURLArray.length) {
-        clearInterval(idInterval)
+        clearInterval(idInterval);
         resolve(fileURLArray);
       }
-    }, 100)
+    }, 100);
   });
 
   const fileURLArrayResolved = await filesPromise;
