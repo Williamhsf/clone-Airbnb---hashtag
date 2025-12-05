@@ -8,8 +8,9 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   connectDb();
+  
   try {
-    const placeDocs = await Place.find({ owner: _id });
+    const placeDocs = await Place.find();
 
     res.json(placeDocs);
   } catch (error) {
@@ -20,6 +21,7 @@ router.get("/", async (req, res) => {
 
 router.get("/owner", async (req, res) => {
   connectDb();
+
   try {
     const userInfo = await JWTVerify(req);
 
@@ -35,6 +37,21 @@ router.get("/owner", async (req, res) => {
     console.error(error);
     res.status(500).json("Deu erro ao verificar o usuario");
   }
+});
+
+router.get("/:id", async (req, res) => {
+  connectDb();
+
+  const { id: _id } = req.params
+  
+  try {
+    const placeDoc = await Place.findOne({ _id });
+
+      res.json(placeDoc);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("Deu erro ao encontrar a Acomodação");
+    }
 });
 
 router.post("/", async (req, res) => {

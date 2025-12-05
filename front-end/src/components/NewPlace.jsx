@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Perks from "./Perks";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext.jsx";
 import PhotoUploader from "./PhotoUploader.jsx";
 
 const NewPlace = () => {
-  const { user } = useUserContext()
+  const { id } = useParams();
+  const { user } = useUserContext();
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -18,9 +19,32 @@ const NewPlace = () => {
   const [checkout, setCheckout] = useState("");
   const [guests, setGuests] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [photolink, setPhotoLink] = useState("")
+  const [photolink, setPhotoLink] = useState("");
 
-  const handleSubmit = async(e) => {
+  useEffect(() => {
+    if (id) {
+      const axiosGet = async () => {
+        const { data } = await axios.get(`/places/${id}`);
+
+        console.log(data)
+
+        setTitle(data.title);
+        setCity(data.city);
+        setPhotos(data.photos);
+        setPerks(data.perks);
+        setDescription(data.description);
+        setExtras(data.extras);
+        setPrice(data.price);
+        setCheckin(data.checkin);
+        setCheckout(data.checkout);
+        setGuests(data.guests);
+      };
+
+      axiosGet();
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
