@@ -4,8 +4,12 @@ import { useParams } from "react-router-dom";
 
 const Place = () => {
   const { id } = useParams();
+  const { user } = useUserContext()
   const [place, setPlace] = useState(null);
   const [overlay, setOverlay] = useState(false);
+  const [checkin, setCheckin] = useState("");
+  const [checkout, setCheckout] = useState("");
+  const [guests, setGuests] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -97,7 +101,74 @@ const Place = () => {
         </div>
 
         {/* colunas */}
-        
+        <div className="grid grid-cols-2">
+          <div className="flex flex-col gap-5 p-6">
+            <div className="flex flex-col gap-2">
+              <p className="text-2xl font-bold">Descrição</p>
+              <p>{place.description}</p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <p className="text-2xl font-bold">Horários e Restrições</p>
+
+              <div>
+                <p>Checkin: {place.checkin}</p>
+                <p>Checkout: {place.checkout}</p>
+                <p>Máximo de convidados: {place.guests}</p>
+              </div>
+            </div>
+          </div>
+
+          <form className="flex flex-col gap-4 self-center justify-self-center rounded-2xl border border-gray-300 px-8 py-4">
+            <p className="text-center text-2xl font-bold">
+              Preço: ${place.price} por noite
+            </p>
+
+            {/* checkin e checkout */}
+            <div className="flex">
+              <div className="rounded-tl-2xl rounded-bl-2xl border border-gray-300 px-4 py-2">
+                <p className="text-center font-bold">Checkin</p>
+                <input
+                  type="date"
+                  value={checkin}
+                  onChange={(e) => setCheckin(e.target.value)}
+                />
+              </div>
+
+              <div className="rounded-tr-2xl rounded-br-2xl border border-l-0 border-gray-300 px-4 py-2">
+                <p className="text-center font-bold">Checkout</p>
+                <input
+                  type="date"
+                  value={checkout}
+                  onChange={(e) => setCheckout(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* convidados */}
+            <div className="flex flex-col gap-2 rounded-2xl border border-gray-300 px-4 py-2">
+              <p className="text-center font-bold">N° de Convidados</p>
+              <input
+                className="rounded-2xl border border-gray-300 px-4 py-2"
+                placeholder={`${place.guests}`}
+                type="number"
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+              />
+            </div>
+
+            <button className="bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 font-bold text-white">
+              Login
+            </button>
+          </form>
+        </div>
+
+        {/* Extras */}
+        <div className="flex flex-col gap-2 rounded-2xl bg-gray-100 p-6">
+          <p className="text-2xl font-bold">Informações Extras:</p>
+          <p>{place.extras}</p>
+        </div>
+
         {/* overlay */}
         <div
           className={`${overlay ? "flex" : "hidden"} fixed inset-0 items-start overflow-y-auto bg-black text-white`}
