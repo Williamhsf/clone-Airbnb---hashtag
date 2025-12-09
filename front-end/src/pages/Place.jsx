@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 const Place = () => {
   const { id } = useParams();
   const [place, setPlace] = useState(null);
+  const [overlay, setOverlay] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -19,11 +20,18 @@ const Place = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    overlay
+      ? document.body.classList.add("overflow-hidden")
+      : document.body.classList.remove("overflow-hidden");
+  }, [overlay]);
+
   if (!place) return <></>;
 
   return (
     <section>
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 p-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 p-8">
+        {/* Title */}
         <div className="flex flex-col gap-1">
           <div className="text-3xl font-bold">{place.title}</div>
 
@@ -47,39 +55,71 @@ const Place = () => {
                 d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
               />
             </svg>
+
             {place.city}
           </div>
+        </div>
 
-          <div className="relative grid aspect-[3/2] grid-cols-[2fr_1fr] grid-rows-2 gap-4 overflow-hidden rounded-2xl">
-            {place.photos
-              .filter((photo, index) => index < 3)
-              .map((photo, index) => (
+        {/* image grid */}
+        <div className="relative grid aspect-[3/2] grid-cols-[2fr_1fr] grid-rows-2 gap-4 overflow-hidden rounded-2xl">
+          {place.photos
+            .filter((photo, index) => index < 3)
+            .map((photo, index) => (
+              <img
+                className={`${index === 0 ? "row-span-2 h-full" : ""} aspect-square w-full cursor-pointer object-cover transition hover:opacity-75`}
+                src={photo}
+                alt="imagem da acomodacao"
+                onClick={() => setOverlay(true)}
+              />
+            ))}
+
+          <div
+            className="absolute right-2 bottom-2 flex cursor-pointer items-center gap-2 rounded-xl border border-black bg-white px-2 py-1 transition hover:scale-105"
+            onClick={() => setOverlay(true)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"
+              />
+            </svg>
+
+            <p>Mostrar todas as fotos</p>
+          </div>
+        </div>
+
+        {/* colunas */}
+        
+        {/* overlay */}
+        <div
+          className={`${overlay ? "flex" : "hidden"} fixed inset-0 items-start overflow-y-auto bg-black text-white`}
+        >
+          <div className="mx-auto flex max-w-7xl flex-col gap-8 p-8">
+            <div className="grid aspect-[3/2] grid-cols-2 gap-4">
+              {place.photos.map((photo, index) => (
                 <img
-                  className={`${index === 0 ? "row-span-2 h-full" : ""} aspect-square w-full cursor-pointer object-cover transition hover:opacity-75`}
+                  className={`aspect-square w-full object-cover`}
                   src={photo}
                   alt="imagem da acomodacao"
                 />
               ))}
-
-            <div className="absolute right-2 bottom-2 flex items-center gap-2 rounded-xl border border-black bg-white px-2 py-1 transition hover:scale-105 cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"
-                />
-              </svg>
-
-              <p>Mostrar todas as fotos</p>
             </div>
           </div>
+
+          <button
+            className="absolute top-2 right-4 cursor-pointer rounded-xl border-none px-4 py-1 text-white transition hover:bg-gray-500"
+            onClick={() => setOverlay(false)}
+          >
+            X Fechar
+          </button>
         </div>
       </div>
     </section>
