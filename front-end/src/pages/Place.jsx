@@ -48,9 +48,9 @@ const Place = () => {
 
   return (
     <section>
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 p-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:gap-6 p-4 sm:p-8">
         {/* Title */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col sm:gap-1">
           <div className="text-3xl font-bold">{place.title}</div>
 
           <div className="flex items-center gap-1">
@@ -79,12 +79,12 @@ const Place = () => {
         </div>
 
         {/* image grid */}
-        <div className="relative grid aspect-[3/2] grid-cols-[2fr_1fr] grid-rows-2 gap-4 overflow-hidden rounded-2xl">
+        <div className="relative grid aspect-square gap-4 overflow-hidden rounded-2xl sm:aspect-[3/2] sm:grid-cols-[2fr_1fr] sm:grid-rows-2">
           {place.photos
             .filter((photo, index) => index < 3)
             .map((photo, index) => (
               <img
-                className={`${index === 0 ? "row-span-2 h-full" : ""} aspect-square w-full cursor-pointer object-cover transition hover:opacity-75`}
+                className={`${index === 0 ? "row-span-2 h-full object-center" : ""} aspect-square w-full cursor-pointer sm:object-cover transition hover:opacity-75`}
                 src={photo}
                 alt="imagem da acomodacao"
                 onClick={() => setOverlay(true)}
@@ -115,15 +115,15 @@ const Place = () => {
         </div>
 
         {/* colunas */}
-        <div className="grid grid-cols-2">
-          <div className="flex flex-col gap-5 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="order-2 md:order-none flex flex-col gap-5 p-6">
             <div className="flex flex-col gap-2">
-              <p className="text-2xl font-bold">Descrição</p>
+              <p className="sm:text-2xl text-lg font-bold">Descrição</p>
               <p>{place.description}</p>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-2xl font-bold">Horários e Restrições</p>
+              <p className="sm:text-2xl text-lg font-bold">Horários e Restrições</p>
 
               <div>
                 <p>Checkin: {place.checkin}</p>
@@ -133,7 +133,7 @@ const Place = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-2xl font-bold">Diferenciais</p>
+              <p className="sm:text-2xl text-lg font-bold">Diferenciais</p>
 
               <div className="flex flex-col gap-2">
                 {place.perks.map(perk => (
@@ -143,25 +143,27 @@ const Place = () => {
             </div>
           </div>
 
-          <form className="flex flex-col gap-4 self-center justify-self-center rounded-2xl border border-gray-300 px-8 py-4">
-            <p className="text-center text-2xl font-bold">
+          <form className="order-1 flex flex-col gap-4 self-center justify-self-center rounded-2xl border border-gray-300 px-4 sm:px-8 py-3 sm:py-4 md:order-none  ">
+            <p className="text-center sm:text-2xl text-lg font-bold">
               Preço: ${place.price} por noite
             </p>
 
             {/* checkin e checkout */}
-            <div className="flex">
-              <div className="rounded-tl-2xl rounded-bl-2xl border border-gray-300 px-4 py-2">
+            <div className="flex flex-col sm:flex-row">
+              <div className="rounded-tl-2xl rounded-tr-2xl border border-gray-300 px-4 py-2 sm:rounded-tr-none sm:rounded-bl-2xl">
                 <p className="font-bold">Checkin</p>
                 <input
+                  className="w-full sm:w-auto"
                   type="date"
                   value={checkin}
                   onChange={(e) => setCheckin(e.target.value)}
                 />
               </div>
 
-              <div className="rounded-tr-2xl rounded-br-2xl border border-l-0 border-gray-300 px-4 py-2">
+              <div className="rounded-br-2xl rounded-bl-2xl border border-t-0 sm:border-t sm:border-l-0 border-gray-300 px-4 py-2 sm:rounded-tr-2xl sm:rounded-bl-none">
                 <p className="font-bold">Checkout</p>
                 <input
+                  className="w-full sm:w-auto"
                   type="date"
                   value={checkout}
                   onChange={(e) => setCheckout(e.target.value)}
@@ -201,7 +203,7 @@ const Place = () => {
 
         {/* Extras */}
         <div className="flex flex-col gap-2 rounded-2xl bg-gray-100 p-6">
-          <p className="text-2xl font-bold">Informações Extras:</p>
+          <p className="sm:text-2xl text-lg font-bold">Informações Extras:</p>
           <p>{place.extras}</p>
         </div>
 
@@ -210,7 +212,7 @@ const Place = () => {
           className={`${overlay ? "flex" : "hidden"} fixed inset-0 items-start overflow-y-auto bg-black text-white`}
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-8 p-8">
-            <div className="grid aspect-[3/2] grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
               {place.photos.map((photo, index) => (
                 <img
                   className={`aspect-square w-full object-cover`}
