@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useUserContext } from "../contexts/UserContext";
+import Perk from "../components/Perk";
 
 const Place = () => {
   const { id } = useParams();
-  const { user } = useUserContext()
+  const { user } = useUserContext();
   const [place, setPlace] = useState(null);
   const [overlay, setOverlay] = useState(false);
   const [checkin, setCheckin] = useState("");
@@ -29,6 +31,18 @@ const Place = () => {
       ? document.body.classList.add("overflow-hidden")
       : document.body.classList.remove("overflow-hidden");
   }, [overlay]);
+
+  const handleBooking = (e) => {
+    e.preventDefault()
+
+    if (checkin && checkout && guests) {
+      
+      console.log("fez uma reserva")
+    } else {
+      alert("Preencha todas informações antes de fazer uma reserva")
+    }
+
+  }
 
   if (!place) return <></>;
 
@@ -117,6 +131,16 @@ const Place = () => {
                 <p>Máximo de convidados: {place.guests}</p>
               </div>
             </div>
+
+            <div className="flex flex-col gap-2">
+              <p className="text-2xl font-bold">Diferenciais</p>
+
+              <div className="flex flex-col gap-2">
+                {place.perks.map(perk => (
+                  <div className="flex gap-2 items-center"><Perk perk={perk}></Perk></div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <form className="flex flex-col gap-4 self-center justify-self-center rounded-2xl border border-gray-300 px-8 py-4">
@@ -127,7 +151,7 @@ const Place = () => {
             {/* checkin e checkout */}
             <div className="flex">
               <div className="rounded-tl-2xl rounded-bl-2xl border border-gray-300 px-4 py-2">
-                <p className="text-center font-bold">Checkin</p>
+                <p className="font-bold">Checkin</p>
                 <input
                   type="date"
                   value={checkin}
@@ -136,7 +160,7 @@ const Place = () => {
               </div>
 
               <div className="rounded-tr-2xl rounded-br-2xl border border-l-0 border-gray-300 px-4 py-2">
-                <p className="text-center font-bold">Checkout</p>
+                <p className="font-bold">Checkout</p>
                 <input
                   type="date"
                   value={checkout}
@@ -157,9 +181,21 @@ const Place = () => {
               />
             </div>
 
-            <button className="bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 font-bold text-white">
-              Login
-            </button>
+            {user ? (
+              <button
+                className="text-center bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 font-bold text-white"
+                onClick={handleBooking}
+              >
+                Reservar
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="text-center bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 font-bold text-white"
+              >
+                Faça seu login
+              </Link>
+            )}
           </form>
         </div>
 
