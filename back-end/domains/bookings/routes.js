@@ -1,9 +1,12 @@
 import { Router } from "express";
 import Booking from "./model.js";
+import { connectDb } from "../../config/db.js";
 
 const router = Router();
 
 router.post("/", async (req, res) => {
+  connectDb();
+
   const { place, user, price, total, checkin, checkout, guests, nights } =
     req.body;
 
@@ -19,7 +22,7 @@ router.post("/", async (req, res) => {
       nights,
     });
 
-    res.json(newBookingDoc)
+    res.json(newBookingDoc);
   } catch (error) {
     console.error(error);
     res.status(500).json("Deu erro ao criar a Reserva.");

@@ -13,12 +13,24 @@ const Place = () => {
   const [checkout, setCheckout] = useState("");
   const [guests, setGuests] = useState("");
 
+  const numberOfDays = (date1, date2) => {
+    const date1GMT = date1 + "GMT-03:00"
+    const date2GMT = date2 + "GMT-03:00"
+
+    const dateCheckin = new Date(date1GMT)
+    const dateCheckout = new Date(date2GMT)
+
+    return (
+      (dateCheckout.getTime() - dateCheckin.getTime()) / (1000 * 60 * 60 * 24) 
+    )
+  }
+
   useEffect(() => {
     if (id) {
       const axiosGet = async () => {
         const { data } = await axios.get(`/places/${id}`);
 
-        console.log(data);
+        
         setPlace(data);
       };
 
@@ -32,23 +44,36 @@ const Place = () => {
       : document.body.classList.remove("overflow-hidden");
   }, [overlay]);
 
-  const handleBooking = (e) => {
-    e.preventDefault()
+  const handleBooking = async (e) => {
+    e.preventDefault();
 
     if (checkin && checkout && guests) {
-      
-      console.log("fez uma reserva")
-    } else {
-      alert("Preencha todas informações antes de fazer uma reserva")
-    }
+      const nights = numberOfDays(checkin, checkout)
 
-  }
+      console.log({checkin, checkout})
+      const objBooking = {
+        place: id,
+        user: user._id,
+        price: place.price,
+        total: place.price * nights,
+        checkin,
+        checkout,
+        guests,
+        nights,
+      };
+
+      const { data } = await axios.post("/bookings", objBooking);
+      console.log(data)
+    } else {
+      alert("Preencha todas informações antes de fazer uma reserva");
+    }
+  };
 
   if (!place) return <></>;
 
   return (
     <section>
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:gap-6 p-4 sm:p-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 p-4 sm:gap-6 sm:p-8">
         {/* Title */}
         <div className="flex flex-col sm:gap-1">
           <div className="text-3xl font-bold">{place.title}</div>
@@ -84,10 +109,11 @@ const Place = () => {
             .filter((photo, index) => index < 3)
             .map((photo, index) => (
               <img
-                className={`${index === 0 ? "row-span-2 h-full object-center" : ""} aspect-square w-full cursor-pointer sm:object-cover transition hover:opacity-75`}
+                className={`${index === 0 ? "row-span-2 h-full object-center" : ""} aspect-square w-full cursor-pointer transition hover:opacity-75 sm:object-cover`}
                 src={photo}
                 alt="imagem da acomodacao"
                 onClick={() => setOverlay(true)}
+                key={photo}
               />
             ))}
 
@@ -116,14 +142,16 @@ const Place = () => {
 
         {/* colunas */}
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="order-2 md:order-none flex flex-col gap-5 p-6">
+          <div className="order-2 flex flex-col gap-5 p-6 md:order-none">
             <div className="flex flex-col gap-2">
-              <p className="sm:text-2xl text-lg font-bold">Descrição</p>
+              <p className="text-lg font-bold sm:text-2xl">Descrição</p>
               <p>{place.description}</p>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="sm:text-2xl text-lg font-bold">Horários e Restrições</p>
+              <p className="text-lg font-bold sm:text-2xl">
+                Horários e Restrições
+              </p>
 
               <div>
                 <p>Checkin: {place.checkin}</p>
@@ -133,18 +161,20 @@ const Place = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="sm:text-2xl text-lg font-bold">Diferenciais</p>
+              <p className="text-lg font-bold sm:text-2xl">Diferenciais</p>
 
               <div className="flex flex-col gap-2">
-                {place.perks.map(perk => (
-                  <div className="flex gap-2 items-center"><Perk perk={perk}></Perk></div>
+                {place.perks.map((perk) => (
+                  <div key={perk} className="flex items-center gap-2">
+                    <Perk perk={perk}></Perk>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <form className="order-1 flex flex-col gap-4 self-center justify-self-center rounded-2xl border border-gray-300 px-4 sm:px-8 py-3 sm:py-4 md:order-none  ">
-            <p className="text-center sm:text-2xl text-lg font-bold">
+          <form className="order-1 flex flex-col gap-4 self-center justify-self-center rounded-2xl border border-gray-300 px-4 py-3 sm:px-8 sm:py-4 md:order-none">
+            <p className="text-center text-lg font-bold sm:text-2xl">
               Preço: ${place.price} por noite
             </p>
 
@@ -160,7 +190,7 @@ const Place = () => {
                 />
               </div>
 
-              <div className="rounded-br-2xl rounded-bl-2xl border border-t-0 sm:border-t sm:border-l-0 border-gray-300 px-4 py-2 sm:rounded-tr-2xl sm:rounded-bl-none">
+              <div className="rounded-br-2xl rounded-bl-2xl border border-t-0 border-gray-300 px-4 py-2 sm:rounded-tr-2xl sm:rounded-bl-none sm:border-t sm:border-l-0">
                 <p className="font-bold">Checkout</p>
                 <input
                   className="w-full sm:w-auto"
@@ -185,7 +215,7 @@ const Place = () => {
 
             {user ? (
               <button
-                className="text-center bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 font-bold text-white"
+                className="bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 text-center font-bold text-white"
                 onClick={handleBooking}
               >
                 Reservar
@@ -193,7 +223,7 @@ const Place = () => {
             ) : (
               <Link
                 to="/login"
-                className="text-center bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 font-bold text-white"
+                className="bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 text-center font-bold text-white"
               >
                 Faça seu login
               </Link>
@@ -203,7 +233,7 @@ const Place = () => {
 
         {/* Extras */}
         <div className="flex flex-col gap-2 rounded-2xl bg-gray-100 p-6">
-          <p className="sm:text-2xl text-lg font-bold">Informações Extras:</p>
+          <p className="text-lg font-bold sm:text-2xl">Informações Extras:</p>
           <p>{place.extras}</p>
         </div>
 
@@ -212,12 +242,13 @@ const Place = () => {
           className={`${overlay ? "flex" : "hidden"} fixed inset-0 items-start overflow-y-auto bg-black text-white`}
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-8 p-8">
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               {place.photos.map((photo, index) => (
                 <img
                   className={`aspect-square w-full object-cover`}
                   src={photo}
                   alt="imagem da acomodacao"
+                  key={photo}
                 />
               ))}
             </div>
