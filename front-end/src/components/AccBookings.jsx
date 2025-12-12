@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Booking from "./Booking";
 
 const AccBookings = () => {
@@ -18,7 +17,7 @@ const AccBookings = () => {
   return (
     <div className="flex w-full max-w-7xl flex-col items-center">
       {bookings.map((booking) => (
-        <Booking booking={booking} key={booking._id}/>
+        <Booking booking={booking} key={booking._id} />
       ))}
     </div>
   );
