@@ -12,7 +12,7 @@ router.get("/owner", async (req, res) => {
     const { _id: id } = await JWTVerify(req);
 
     try {
-    const bookingDocs = await Booking.find({ user: id });
+    const bookingDocs = await Booking.find({ user: id }).populate("place");
 
     res.json(bookingDocs)
   } catch (error) {
