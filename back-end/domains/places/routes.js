@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
     res.json(placeDocs);
   } catch (error) {
     console.error(error);
-    res.status(500).json("Deu erro ao encontrar as Acomodações");
+    res.status(500).json("Deu erro encontrar as Acomodações");
   }
 });
 
@@ -31,11 +31,11 @@ router.get("/owner", async (req, res) => {
       res.json(placeDocs);
     } catch (error) {
       console.error(error);
-      res.status(500).json("Deu erro ao verificar o usuario");
+      res.status(500).json("Deu erro encontrar as Acomodações");
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json("Deu erro ao verificar o usuario");
+    res.status(500).json("Deu erro verificar o usuário");
   }
 });
 
@@ -50,7 +50,7 @@ router.get("/:id", async (req, res) => {
     res.json(placeDoc);
   } catch (error) {
     console.error(error);
-    res.status(500).json("Deu erro ao encontrar a Acomodação");
+    res.status(500).json("Deu erro encontrar aa Acomodação");
   }
 });
 
@@ -73,7 +73,7 @@ router.put("/:id", async (req, res) => {
   } = req.body;
 
   try {
-    const updatePlaceDoc = await Place.findOneAndUpdate(
+    const updatedPlaceDoc = await Place.findOneAndUpdate(
       { _id },
       {
         title,
@@ -89,7 +89,7 @@ router.put("/:id", async (req, res) => {
       }
     );
 
-    res.json(updatePlaceDoc);
+    res.json(updatedPlaceDoc);
   } catch (error) {
     console.error(error);
     res.status(500).json("Deu erro ao atualizar a acomodação");
@@ -147,7 +147,7 @@ router.post("/upload/link", async (req, res) => {
     res.json(fileURL);
   } catch (error) {
     console.error(error);
-    res.status(500).json("Deu erro ao baixar a imagem.");
+    res.status(500).json("Deu baixar a imagem.");
   }
 });
 
@@ -165,7 +165,7 @@ router.post("/upload", uploadImage().array("files", 10), async (req, res) => {
 
         fileURLArray.push(fileURL);
       } catch (error) {
-        console.error("Deu erro ao subir para o S3", error);
+        console.error("Deu algum erro ao subir para o S3", error);
         reject(error);
       }
     });
